@@ -86,6 +86,12 @@ const sidebars: SidebarsConfig = {
     },
     { type: 'link', label: 'Accessibility Checks', href: 'checks', autoAddBaseUrl: true },
     {
+      type: 'link',
+      label: 'AI Coding Agents',
+      href: 'ai-agents',
+      autoAddBaseUrl: true,
+    },
+    {
       type: 'category',
       label: 'Packages',
       collapsible: true,

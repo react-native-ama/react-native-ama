@@ -105,6 +105,16 @@ You can use the playground app within this repository to see how AMA checks work
 The playground can also be used to learn how to fix accessibility issues in your app.
 
 
+## 🤖 AI coding agents
+
+Every AMA package ships an [agent skill](https://agentskills.io) that teaches AI coding agents (Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI and others) how to use its API and how to write code that passes AMA's checks:
+
+```sh
+npx skills add react-native-ama/react-native-ama
+```
+
+The skills are also included in each npm package, in `node_modules/@react-native-ama/<package>/skills/`, so you can link the ones matching your installed version. Agents use them automatically when your request matches. See [AI Coding Agents](https://commerce.nearform.com/open-source/react-native-ama/docs/ai-agents) for the details.
+
 ## 📃 [Documentation](https://commerce.nearform.com/open-source/react-native-ama)
 
 The documentation contains everything you need to know about `@react-native-ama/...`. It contains several sections in order of importance when you first get started:
