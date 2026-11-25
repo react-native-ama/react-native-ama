@@ -129,7 +129,7 @@ export const AMARuleError = __DEV__
       return (
         <ScrollView style={{ maxHeight, flex: 1, width: '100%', padding: 12 }}>
           <View style={styles!.row}>
-            <Text style={styles!.bold} aria-role="header">
+            <Text style={styles!.bold} accessibilityRole="header">
               {SEVERITIES![ruleHelp.severity]}:
             </Text>
             <Text style={styles!.flex}>{ruleHelp.issue}</Text>
@@ -143,7 +143,7 @@ export const AMARuleError = __DEV__
             </Pressable>
           </View>
 
-          <Text style={[styles!.bold, styles?.full]} aria-role="header">
+          <Text style={[styles!.bold, styles?.full]} accessibilityRole="header">
             Why this matters:
           </Text>
           <View style={[styles!.row, styles?.column]}>
@@ -154,7 +154,7 @@ export const AMARuleError = __DEV__
               </View>
             ) : null}
           </View>
-          <Text style={[styles!.bold, styles?.full]} aria-role="header">
+          <Text style={[styles!.bold, styles?.full]} accessibilityRole="header">
             How to fix:
           </Text>
           <View style={styles!.row}>{renderHowToFix(ruleHelp.howToFix)}</View>

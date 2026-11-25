@@ -10,28 +10,31 @@ and [react-native-gesture-handler](https://github.com/software-mansion/react-nat
 
 ```jsx
 import { BottomSheet } from '@react-native-ama/bottom-sheet';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const Component = () => (
-  <BottomSheet
-    visible={modalVisible}
-    onRequestClose={() => {
-      setModalVisible(!modalVisible);
-    }}
-    closeActionAccessibilityLabel="close bottomsheet"
-    bottomSheetStyle={styles.modalView}
-    headerComponent={
-      <View style={{ paddingHorizontal: theme.padding.big }}>
-        <Header title="This is the bottom sheet" />
-      </View>
-    }
-    scrollViewStyle={styles.modalViewContent}>
-    <Pressable
-      onPress={() => setModalVisible(!modalVisible)}
-      accessibilityRole="button">
-      <Text>Close bottom sheet</Text>
-    </Pressable>
-  </BottomSheet>
-);
+const Component = () => {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <BottomSheet
+      visible={modalVisible}
+      onClose={() => setModalVisible(false)}
+      closeActionAccessibilityLabel="Close bottom sheet"
+      topInset={insets.top}
+      bottomSheetStyle={styles.modalView}
+      headerComponent={
+        <View style={{ paddingHorizontal: theme.padding.big }}>
+          <Header title="This is the bottom sheet" />
+        </View>
+      }>
+      <Pressable
+        onPress={() => setModalVisible(false)}
+        accessibilityRole="button">
+        <Text>Close bottom sheet</Text>
+      </Pressable>
+    </BottomSheet>
+  );
+};
 ```
 
 ## Accessibility
@@ -185,7 +188,7 @@ If true, the bottom sheet will not be closed when the user taps on the overlay; 
 
 | Type    | Default |
 | ------- | ------- |
-| boolean | true    |
+| boolean | false   |
 
 ### `hasScrollableContent`
 

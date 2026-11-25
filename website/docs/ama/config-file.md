@@ -73,7 +73,7 @@ The JSON file does not need to contain all log keys. **AMA** uses the default ru
 ```json title="ama.config.json"
 {
   "rules": {
-    "CONTRAST_FAILED": "warn",
+    "CONTRAST_FAILED": "SHOULD",
     "CONTRAST_CHECKER_MAX_DEPTH": 0
   },
   "accessibilityLabelExceptions": ["FAQ"],

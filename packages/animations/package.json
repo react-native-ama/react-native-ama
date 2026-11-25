@@ -31,7 +31,8 @@
   },
   "files": [
     "src",
-    "dist"
+    "dist",
+    "skills"
   ],
   "scripts": {
     "build": "rm -rf dist && ../../node_modules/.bin/tsc -p ./tsconfig.build.json",

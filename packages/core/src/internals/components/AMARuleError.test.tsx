@@ -64,7 +64,7 @@ describe('AMARuleError', () => {
       />,
     );
 
-    expect(screen.getByText(/aria-role="button"/, { includeHiddenElements: true })).toBeTruthy();
+    expect(screen.getByText(/role="button"/, { includeHiddenElements: true })).toBeTruthy();
   });
 
   it('renders contrast issue with extra color swatch text', () => {

@@ -60,6 +60,7 @@ jest.mock('react-native', () => ({
   SafeAreaView: 'SafeAreaView',
   ViewPropTypes: {},
   Keyboard: { dismiss: jest.fn(), addListener: jest.fn(() => ({ remove: jest.fn() })) },
+  useWindowDimensions: jest.fn(() => ({ width: 375, height: 812, scale: 2, fontScale: 1 })),
   Dimensions: {
     get: jest.fn(() => ({ width: 375, height: 812, screen: { width: 375, height: 812 } })),
     addEventListener: jest.fn(() => ({ remove: jest.fn() })),

@@ -79,7 +79,7 @@ Once the user presses the **next** key, AMA checks that the:
 | ------- | --------- |
 | boolean | undefined |
 
-### `nextFormField` _(optional)_
+### `nextFormFieldRef` _(optional)_
 
 This parameter specifies the next form field to focus on when the next button is pressed.
 
@@ -90,16 +90,16 @@ This parameter specifies the next form field to focus on when the next button is
 #### Example
 
 ```jsx
-<TextInput
-  style={styles.input}
-  placeholder=""
-  onChangeText={newText => setText(newText)}
-  defaultValue={text}
-  label={<Text style={styles.label}>Last name:</Text>}
-  returnKeyType="next"
-  nextFormField={emailRef}
-  ref={lastNameRef}
-/>
+const props = useTextInput({
+  accessibilityLabel: 'Last name',
+  hasValidation: false,
+  required: false,
+  returnKeyType: 'next',
+  nextFormFieldRef: emailRef,
+  ref: lastNameRef,
+});
+
+<RNTextInput ref={lastNameRef} {...props} />
 ```
 
 ### `id`
@@ -146,18 +146,13 @@ If true returns the [errorMessage](#errormessage) as part of the `accessibilityH
 | ------- | --------- |
 | boolean | undefined |
 
-:::info
-
-The component will try to extract any text within the `errorComponent` if no `errorText` is provided
-:::
-
 ### `errorMessage`
 
 | Type   | Default   |
 | ------ | --------- |
 | string | undefined |
 
-The error message to be announced by the screen reader.
+The error message to be announced by the screen reader. It's added to the `accessibilityHint` only while `hasError` is true.
 
 ### `requiredMessage`
 
@@ -178,7 +173,7 @@ The hook returns all passed-in props merged with the following overrides:
 | `onSubmitEditing` | function | Calls the original `onSubmitEditing` then moves focus to the next field or submits the form |
 | `onLayout` | function | Calls the original `onLayout` then re-evaluates whether this is the last field |
 | `blurOnSubmit` | boolean | `true` when `returnKeyType` is `"done"` |
-| `accessibilityHint` | string | Combined accessibility hint including any error message |
+| `accessibilityHint` | string | Combined accessibility hint, including `errorMessage` when `hasError` is true |
 | `focusNextFormField` | `() => void` | From `useFormField` — focuses the next field or submits the form |
 | `isLastField` | `() => boolean` | From `useFormField` — returns `true` if this is the last registered field |
 

@@ -31,7 +31,23 @@ import Animated, {
 import { useBottomSheetGestureHandler } from "../hooks/useBottomSheetGestureHandler";
 import { useKeyboard } from "../hooks/useKeyboard";
 
-const AnimaCore = require("@react-native-ama/core");
+// `@react-native-ama/core` is an optional peer dependency.
+let AmaCore: any = null;
+
+try {
+  AmaCore = require("@react-native-ama/core");
+} catch {
+  AmaCore = null;
+}
+
+const useOptionalTimedAction = () => {
+  try {
+    return AmaCore?.useTimedAction?.()?.onTimeout ?? null;
+  } catch {
+    // core is installed but the app isn't wrapped in <AMAProvider />
+    return null;
+  }
+};
 
 export type BottomSheetProps = {
   animationDuration?: number;
@@ -117,7 +133,7 @@ export const BottomSheet = React.forwardRef<
     const translateY = useSharedValue(SCREEN_HEIGHT * 1.5);
     const contentHeight = useSharedValue(0);
     const dragOpacity = useSharedValue(0);
-    const onTimeout = AnimaCore?.useTimedAction()?.onTimeout || setTimeout;
+    const onTimeout = useOptionalTimedAction() || setTimeout;
     const isMounted = React.useRef(false);
     const [headerHeight, setHeaderHeight] = React.useState(-1);
     const [footerHeight, setFooterHeight] = React.useState(-1);

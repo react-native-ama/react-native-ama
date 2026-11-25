@@ -4197,6 +4197,7 @@ __metadata:
     husky: ^8.0.1
     jest: ^29.6.3
     prettier: 2.8.8
+    react: 19.0.0
     react-native: 0.79.1
     react-native-gesture-handler: ~2.24.0
     react-native-reanimated: ~3.17.4
@@ -12509,6 +12510,13 @@ __metadata:
   peerDependencies:
     react: ^19.0.0
   checksum: 2e1e527588c69e822b7aa25262c9f4a48161ede9cee5109b88228ecafbd91ce82f7afed176645efcba903ba5a43d05842a8229cdde220049e42a0cf679715dbc
+  languageName: node
+  linkType: hard
+
+"react@npm:19.0.0":
+  version: 19.0.0
+  resolution: "react@npm:19.0.0"
+  checksum: 86de15d85b2465feb40297a90319c325cb07cf27191a361d47bcfe8c6126c973d660125aa67b8f4cbbe39f15a2f32efd0c814e98196d8e5b68c567ba40a399c6
   languageName: node
   linkType: hard
 

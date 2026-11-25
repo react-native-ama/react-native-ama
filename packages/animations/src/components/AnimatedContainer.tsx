@@ -1,4 +1,3 @@
-import { AutofocusContainer } from '@react-native-ama/core';
 import * as React from 'react';
 import type { PropsWithChildren } from 'react';
 import type { ViewProps } from 'react-native';
@@ -9,6 +8,30 @@ import {
   ToAnimation,
   useReanimatedAnimationBuilder,
 } from '../hooks/useReanimatedAnimationBuilder';
+import { optionalCore } from '../internals/optionalCore';
+
+let hasWarnedAboutAutofocus = false;
+
+const getWrapper = (autofocus?: boolean) => {
+  if (!autofocus) {
+    return React.Fragment;
+  }
+
+  const AutofocusContainer = optionalCore?.AutofocusContainer;
+
+  if (AutofocusContainer) {
+    return AutofocusContainer;
+  }
+
+  if (__DEV__ && !hasWarnedAboutAutofocus) {
+    hasWarnedAboutAutofocus = true;
+    console.warn(
+      '[AMA] AnimatedContainer: the `autofocus` prop needs @react-native-ama/core. Install it to move the screen reader focus to the animated content.',
+    );
+  }
+
+  return React.Fragment;
+};
 
 type UseReanimated = Omit<AnimateProps<ViewProps>, 'entering' | 'exiting'> & {
   autofocus?: boolean;
@@ -46,7 +69,7 @@ export const AnimatedContainer = React.forwardRef<
       duration,
     });
 
-    const Wrapper = autofocus ? AutofocusContainer : React.Fragment;
+    const Wrapper = getWrapper(autofocus);
     return (
       <Wrapper>
         <Animated.View

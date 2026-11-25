@@ -159,6 +159,43 @@ describe('TextInput', () => {
     );
   });
 
+  describe('accessibilityHint', () => {
+    const renderInput = (props: Record<string, unknown>) =>
+      render(
+        <TextInput
+          testID="input"
+          renderLabel={(a11yProps) => <Text {...a11yProps}>First name</Text>}
+          accessibilityLabel="First name"
+          hasValidation={true}
+          {...props}
+        />,
+      );
+
+    it('adds the errorMessage to the hint when the field has an error', () => {
+      const { getByTestId } = renderInput({
+        accessibilityHint: 'As on your passport',
+        hasError: true,
+        errorMessage: 'Enter your first name',
+      });
+
+      expect(getByTestId('input').props.accessibilityHint).toBe(
+        'As on your passport, Enter your first name',
+      );
+    });
+
+    it('does not add the errorMessage to the hint when the field has no error', () => {
+      const { getByTestId } = renderInput({
+        accessibilityHint: 'As on your passport',
+        hasError: false,
+        errorMessage: 'Enter your first name',
+      });
+
+      expect(getByTestId('input').props.accessibilityHint).toBe(
+        'As on your passport',
+      );
+    });
+  });
+
   it('uses the accessibilityLabel prop', () => {
     const renderAPI = render(
       <TextInput

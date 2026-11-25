@@ -31,7 +31,9 @@
     "test:lists": "yarn workspace @react-native-ama/lists test",
     "test:bottom-sheet": "yarn workspace @react-native-ama/bottom-sheet test",
     "test": "yarn test:core && yarn test:animations && yarn test:forms && yarn test:lists && yarn test:bottom-sheet",
-    "test:coverage": "yarn test:core --coverage && yarn test:animations --coverage && yarn test:forms --coverage && yarn test:lists --coverage && yarn test:bottom-sheet --coverage"
+    "test:coverage": "yarn test:core --coverage && yarn test:animations --coverage && yarn test:forms --coverage && yarn test:lists --coverage && yarn test:bottom-sheet --coverage",
+    "test:isolation": "node scripts/check-isolation.mjs",
+    "test:skills": "node scripts/check-skills.mjs"
   },
   "workspaces": [
     "packages/animations",
@@ -62,6 +64,7 @@
     "husky": "^8.0.1",
     "jest": "^29.6.3",
     "prettier": "2.8.8",
+    "react": "19.0.0",
     "react-native": "0.79.1",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-reanimated": "~3.17.4",

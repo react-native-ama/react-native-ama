@@ -51,6 +51,29 @@ describe('useFormField', () => {
     });
   });
 
+  it.each([
+    [true, 'Optional, Enter a valid email'],
+    [false, 'Optional'],
+  ])(
+    'adds errorMessage to the accessibilityHint only when hasError is %s',
+    (hasError, expected) => {
+      const { result } = renderHook(
+        () =>
+          useFormField({
+            ref: { current: 'hello' },
+            hasFocusCallback: false,
+            hasValidation: true,
+            hasError,
+            accessibilityHint: 'Optional',
+            errorMessage: 'Enter a valid email',
+          }),
+        { wrapper: renderHookWrapper },
+      );
+
+      expect(result.current.accessibilityHint).toBe(expected);
+    },
+  );
+
   it('unregister itself from the refs when is mounted', () => {
     const { unmount } = renderHook(
       () => {
