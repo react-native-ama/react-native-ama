@@ -9,13 +9,15 @@ import { TextInput } from '@react-native-ama/forms';
 
 <TextInput
   style={styles.input}
-  placeholder=""
+  accessibilityLabel="First name"
   onChangeText={newText => setText(newText)}
   defaultValue={text}
-  label={<Text style={styles.label}>First name:</Text>}
-  labelPosition="afterText"
-  returnKeyType="next"
-  nextFormField={nextFormField}
+  hasValidation={false}
+  renderLabel={a11yProps => (
+    <Text {...a11yProps} style={styles.label}>
+      First name:
+    </Text>
+  )}
 />;
 ```
 
@@ -23,15 +25,17 @@ import { TextInput } from '@react-native-ama/forms';
 
 Compared to the default React Native component, this custom component:
 
-- Uses the given label text as `accessibilityLabel`; if none is provided
-- Hides the label from the screen reader (as it would provide redundant information)
+- Requires an `accessibilityLabel` (or `aria-label`) that matches the visible label
+- Hides the label and the error from the screen reader through the `a11yProps` passed to `renderLabel` and `renderError` (they would provide redundant information)
 - Handles the value `returnKeyType`
 - Handles focusing the next form field when `returnKeyType` is **next**
 - Checks for keyboard trap <DevOnly />
 
 ### accessibilityLabel
 
-The input field must have an `accessibilityLabel`, and also its corresponding must be hidden from the screen reader to avoid redundant announcement of the same label.
+The input field must have an `accessibilityLabel` (or `aria-label`), and its visible label must be hidden from the screen reader to avoid the same label being announced twice.
+
+AMA checks that a visible text on screen matches the `accessibilityLabel` (case-insensitive, ignoring one trailing symbol such as `:`), and reports [INPUT_HAS_NO_VISIBLE_LABEL](/docs/ama/checks) otherwise.
 
 ### returnKeyType
 
@@ -57,40 +61,36 @@ Once the user presses the **next** key, AMA checks that the:
 
 ## Additional Props
 
-### <Required /> `labelComponent`
+### <Required /> `accessibilityLabel` / `aria-label`
 
-The custom labelComponent.
+The accessible name of the input. One of the two is required (not both). It must match the text of the visible label rendered by [`renderLabel`](#renderlabel).
 
-| Type        | Default   |
-|-------------|-----------|
-| JSX.Element | undefined |
+| Type   | Default   |
+|--------|-----------|
+| string | undefined |
 
-If no accessibilityLabel is provided, the component children are used to generate the one.
-Also, the label is modified, and the following prop added:
+### `renderLabel`
 
-- `importantForAccessibility: no`
+Renders the visible label. It receives the `a11yProps` to spread on the label element, so that it's hidden from the screen reader:
+
+- `importantForAccessibility: 'no-hide-descendants'`
 - `accessibilityElementsHidden: true`
 
-So, the label itself is made hidden from the screen reader.
-
-:::info
-
-If the label content ends with a \*, this is stripped from the `accessibilityLabel`, example:
+| Type                                    | Default   |
+|-----------------------------------------|-----------|
+| `(a11yProps) => React.ReactNode`        | undefined |
 
 ```jsx
 <TextInput
-  style={styles.input}
-  placeholder=""
-  onChangeText={newText => setText(newText)}
-  defaultValue={text}
-  label={<Text style={styles.label}>First name:*</Text>}
-  labelPosition="afterText"
-  returnKeyType="next"
-  nextTextInput={lastNameRef}
+  accessibilityLabel="Email address"
+  hasValidation={false}
+  renderLabel={a11yProps => <Text {...a11yProps}>Email address:</Text>}
 />
 ```
 
-The `accessibilityLabel` generate is: **"First name:"**
+:::warning
+
+Don't mark a required field only with an asterisk: AMA reports `INPUT_HAS_NO_VISIBLE_LABEL_ENDING_WITH_ASTERISK`. Say it in words instead, for example "Email address (required)".
 :::
 
 ### `labelPosition`
@@ -115,10 +115,11 @@ This parameter specifies the next form field to focus on when the next button is
 ```jsx
 <TextInput
   style={styles.input}
-  placeholder=""
+  accessibilityLabel="Last name"
   onChangeText={newText => setText(newText)}
   defaultValue={text}
-  label={<Text style={styles.label}>Last name:</Text>}
+  hasValidation={false}
+  renderLabel={a11yProps => <Text {...a11yProps}>Last name:</Text>}
   returnKeyType="next"
   nextFormField={emailRef}
   ref={lastNameRef}
@@ -144,9 +145,9 @@ The ID of the next field to focus when the user taps on the `next` button of the
 ### <Required /> `hasValidation`
 
 This property is used to know if the input can display an error, in case of failed validation; and if so is used to:
- pf
-1. Set the error, in case of failure, as part of the accessibilityHint
-2. Hides the [errorComponent](#errorcomponent) from the accessibility tree to prevent redundant information for the user
+
+1. Set the [errorMessage](#errormessage), in case of failure, as part of the accessibilityHint
+2. Hide the element rendered by [renderError](#rendererror) from the accessibility tree to prevent redundant information for the user
 
 
 Here can be find more information about [error handling in Forms](/guidelines/forms#errors)
@@ -157,38 +158,31 @@ Here can be find more information about [error handling in Forms](/guidelines/fo
 
 ### `hasError`
 
-If true the component sets the given error as part of the `accessibilityHint`
+If true, the [errorMessage](#errormessage) is added to the `accessibilityHint` and [renderError](#rendererror) is rendered. The [`<Form />`](./Form.md) also uses it to focus the first invalid field when the submission fails.
 
 | Type    | Default   |
 |---------|-----------|
 | boolean | undefined |
 
-:::info
+### `errorMessage`
 
-The component will try to extract any text within the [errorComponent](#errorcomponent) if no `errorText` is provided
-:::
+The error announced by the screen reader, as part of the `accessibilityHint`, while `hasError` is true.
 
-### `errorComponent`
+| Type   | Default   |
+|--------|-----------|
+| string | undefined |
 
-The error component to render in case of `hasError = true`. The position of the component can be changed using the [errorPosition](#errorposition) property.
+### `renderError`
 
-| Type        | Default   |
-|-------------|-----------|
-| JSX.Element | undefined |
+Renders the visible error when `hasError` is true. The position can be changed using the [errorPosition](#errorposition) property. It receives the same `a11yProps` as [renderLabel](#renderlabel), to spread on the error element so that it's hidden from the accessibility tree (the error is announced through the hint instead).
 
-:::info
-
-The component is automatically modified with the following properties added:
-
-- `importantForAccessibility: no`
-- `accessibilityElementsHidden: true`
-
-to hide it from the accessibility tree.
-:::
+| Type                                    | Default   |
+|-----------------------------------------|-----------|
+| `(a11yProps) => React.ReactNode`        | undefined |
 
 ### `errorPosition`
 
-The position where to render the [errorComponent](#errorcomponent)
+The position where to render the [renderError](#rendererror) element
 
 | Type            | Default      |
 |-----------------|--------------|

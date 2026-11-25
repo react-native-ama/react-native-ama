@@ -131,9 +131,11 @@ export const useFormField = ({
     refs[myRefIndex].isEditable = editable;
   }, [editable, hasError, refs]);
 
-  const fullAccessibilityHint = [accessibilityHint, errorMessage]
+  // The error message is only part of the hint while the field is in error;
+  // otherwise a screen reader would announce it on valid fields too.
+  const fullAccessibilityHint = [accessibilityHint, hasError && errorMessage]
     .filter(Boolean)
-    .join(',');
+    .join(', ');
 
   return {
     focusNextFormField,

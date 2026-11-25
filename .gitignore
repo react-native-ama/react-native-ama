@@ -54,3 +54,6 @@ playground/android
 playground/ios
 
 .java-version
+
+# Temporary files from scripts/check-skills.mjs
+.skill-check-tmp/

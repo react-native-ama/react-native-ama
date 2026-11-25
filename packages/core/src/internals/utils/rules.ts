@@ -175,8 +175,8 @@ export const RULES_HELP: RuleHelp | null = __DEV__
         'Without a role, assistive technologies cannot determine how this element should be used. Voice Control may also misinterpret how to interact with it.',
       howToFix: [
         'Assign the correct accessibility role, for example:',
-        ' • Button: `aria-role="button"`',
-        ' • Switch: `aria-role="switch"`',
+        ' • Button: `role="button"`',
+        ' • Switch: `role="switch"`',
       ],
     },
 
@@ -274,7 +274,7 @@ export const RULES_HELP: RuleHelp | null = __DEV__
       severity: 'Serious',
       message:
         'Screen reader users rely on headers to navigate content efficiently. Headers also help Voice Control users jump to sections by name.',
-      howToFix: 'Mark visual headers with `aria-role="header"`.',
+      howToFix: 'Mark visual headers with `accessibilityRole="header"` (or `role="heading"`).',
     },
 
     NO_ACCESSIBILITY_STATE_SET: {

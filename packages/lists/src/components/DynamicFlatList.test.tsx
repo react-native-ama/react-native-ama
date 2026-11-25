@@ -8,33 +8,46 @@ beforeEach(() => {
 });
 
 describe('DynamicFlatList', () => {
-  it('uses the style provided by useDynamicFlatList when __DEV__ is true', () => {
-    jest.spyOn(UseDynamicList, 'useDynamicList').mockReturnValue({
-      style: { backgroundColor: 'formidable' },
-    } as any);
-
+  it('sets role="list" when __DEV__ is true', () => {
     const { getByTestId } = render(
       <DynamicFlatList
         data={[]}
         singularMessage="%count% singular"
-        pluralMessage="%count% plurarl"
+        pluralMessage="%count% plural"
         renderItem={() => null}
         testID={'test-id'}
       />,
     );
 
-    expect(getByTestId('test-id').props.style).toEqual({
-      backgroundColor: 'formidable',
+    expect(getByTestId('test-id').props.role).toBe('list');
+  });
+
+  it('passes the list props to useDynamicList', () => {
+    const isPlural = (count: number) => count > 1;
+
+    render(
+      <DynamicFlatList
+        data={[1, 2]}
+        singularMessage="%count% singular"
+        pluralMessage="%count% plural"
+        numColumns={2}
+        isPlural={isPlural}
+        renderItem={() => null}
+      />,
+    );
+
+    expect(UseDynamicList.useDynamicList).toHaveBeenCalledWith({
+      data: [1, 2],
+      singularMessage: '%count% singular',
+      pluralMessage: '%count% plural',
+      numColumns: 2,
+      isPlural,
     });
   });
 
-  it('does not uses the style provided by useDynamicFlatList when __DEV__ is false', () => {
+  it('does not set the role when __DEV__ is false', () => {
     // @ts-ignore
     global.__DEV__ = false;
-
-    jest.spyOn(UseDynamicList, 'useDynamicList').mockReturnValue({
-      style: { backgroundColor: 'formidable' },
-    } as any);
 
     const {
       DynamicFlatList: OriginalDynamicFlatList,
@@ -44,13 +57,13 @@ describe('DynamicFlatList', () => {
       <OriginalDynamicFlatList
         data={[]}
         singularMessage="%count% singular"
-        pluralMessage="%count% plurarl"
+        pluralMessage="%count% plural"
         renderItem={() => null}
         testID={'test-id'}
       />,
     );
 
-    expect(getByTestId('test-id').props.style).toEqual(undefined);
+    expect(getByTestId('test-id').props.role).toBeUndefined();
   });
 });
 

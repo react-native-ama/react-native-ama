@@ -34,11 +34,11 @@ It also shows how to build a more accessible [form](/guidelines/forms) using the
 
 ```jsx
 import * as React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
-import { AMAProvider, useAMAContext } from '@react-native-ama/core'
-import { Form, SwitchListItem, Text, TextInput } from '@react-native-ama/forms'
+import { Pressable, ScrollView, StyleSheet, Text } from 'react-native';
+import { AMAProvider, useAMAContext } from '@react-native-ama/core';
+import { Form, TextInput } from '@react-native-ama/forms';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator, NativeStackNavigationOptions } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
 
@@ -62,9 +62,7 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{
-            headerTitle: () => <Text autofocus title={'The header'} />,
-          }}
+          options={{ title: 'Sign up' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -72,25 +70,24 @@ const AppNavigator = () => {
 };
 
 export const HomeScreen = () => {
-  const [emailAddress, setEmailAddress] = React.useState('');
   const [firstName, setFirstName] = React.useState('');
   const [lastName, setLastName] = React.useState('');
-  const [testKeyboardTrap, setTestKeyboardTrap] = React.useState(false);
-  const [invalidFields, setInvalidFields] = React.useState<{
-    lastName: boolean;
-    firstName: boolean;
-  }>({ firstName: false, lastName: false });
+  const [emailAddress, setEmailAddress] = React.useState('');
+  const [invalidFields, setInvalidFields] = React.useState({
+    firstName: false,
+    lastName: false,
+  });
 
-  const toggleSwitch = () =>
-    setTestKeyboardTrap(previousState => !previousState);
-
-  const lastNameRef = React.useRef(null);
-
+  // Return true when the form is valid. Returning false makes AMA
+  // move the focus to the first field with hasError.
   const handleOnSubmit = () => {
-    setInvalidFields({
-      firstName: firstName.length === 0,
-      lastName: lastName.length === 0,
-    });
+    const invalid = {
+      firstName: firstName.trim().length === 0,
+      lastName: lastName.trim().length === 0,
+    };
+    setInvalidFields(invalid);
+
+    return !invalid.firstName && !invalid.lastName;
   };
 
   return (
@@ -98,69 +95,68 @@ export const HomeScreen = () => {
       <ScrollView style={styles.view}>
         <TextInput
           style={styles.input}
-          placeholder=""
-          onChangeText={newText => setFirstName(newText)}
+          accessibilityLabel="First name"
+          onChangeText={setFirstName}
           defaultValue={firstName}
-          label={
-            <>
-              <Text style={styles.label}>First name:</Text>
-            </>
-          }
           hasValidation={true}
-          error={<Text>The first name cannot be blank</Text>}
           hasError={invalidFields.firstName}
-        />
-
-        <SwitchListItem
-          label={
-            <Text style={styles.switchText}>
-              Test keyboard trap on next field
-            </Text>
+          errorMessage={
+            invalidFields.firstName ? 'The first name cannot be blank' : undefined
           }
-          style={styles.switchListItem}
-          value={testKeyboardTrap}
-          onValueChange={toggleSwitch}
-        />
-        {testKeyboardTrap ? (
-          <>
-            <Text>
-              Note: The following field causes the app to crash when pressing
-              the "next" button on the keyboard
+          renderLabel={a11yProps => (
+            <Text {...a11yProps} style={styles.label}>
+              First name:
             </Text>
-            <Spacer height="normal" />
-          </>
-        ) : null}
+          )}
+          renderError={a11yProps => (
+            <Text {...a11yProps}>The first name cannot be blank</Text>
+          )}
+        />
 
         <TextInput
           style={styles.input}
-          placeholder=""
+          accessibilityLabel="Last name"
+          onChangeText={setLastName}
           defaultValue={lastName}
-          label={<Text style={styles.label}>Last name:</Text>}
-          onChangeText={newText => setLastName(newText)}
           hasValidation={true}
-          error={<Text>The thing cannot be null</Text>}
           hasError={invalidFields.lastName}
-          ref={lastNameRef}
-          onBlur={() => {
-            testKeyboardTrap && lastNameRef.current?.focus();
-          }}
+          errorMessage={
+            invalidFields.lastName ? 'The last name cannot be blank' : undefined
+          }
+          renderLabel={a11yProps => (
+            <Text {...a11yProps} style={styles.label}>
+              Last name:
+            </Text>
+          )}
+          renderError={a11yProps => (
+            <Text {...a11yProps}>The last name cannot be blank</Text>
+          )}
         />
 
         <TextInput
           style={styles.input}
-          placeholder=""
+          accessibilityLabel="Email address"
+          onChangeText={setEmailAddress}
           defaultValue={emailAddress}
-          label={<Text style={styles.label}>Email address:</Text>}
-          onChangeText={newText => setEmailAddress(newText)}
+          keyboardType="email-address"
           hasValidation={false}
+          renderLabel={a11yProps => (
+            <Text {...a11yProps} style={styles.label}>
+              Email address:
+            </Text>
+          )}
         />
-        <Pressable
-            onPress={handleOnSubmit}
-            accessibilityLabel="Submit"
-            accessibilityRole="button"
-        >
-            <Text>Submit</Text>
-        </Pressable>
+
+        <Form.Submit>
+          {({ onPress }) => (
+            <Pressable
+              onPress={onPress}
+              accessibilityRole="button"
+              style={styles.submit}>
+              <Text>Submit</Text>
+            </Pressable>
+          )}
+        </Form.Submit>
       </ScrollView>
     </Form>
   );
@@ -168,23 +164,21 @@ export const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   view: {
-    paddingHorizontal: theme.padding.big,
-    paddingVertical: theme.padding.big,
+    paddingHorizontal: 24,
+    paddingVertical: 24,
   },
   input: {
-    height: 40,
+    minHeight: 48,
     borderWidth: 1,
     padding: 10,
   },
   label: {
-    paddingBottom: theme.padding.small,
+    paddingBottom: 8,
   },
-  switchText: {
-    paddingRight: theme.padding.normal,
-    flex: 1,
-  },
-  switchListItem: {
-    marginVertical: theme.padding.normal,
+  submit: {
+    minHeight: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

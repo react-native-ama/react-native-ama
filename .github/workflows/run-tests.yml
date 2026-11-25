@@ -25,5 +25,28 @@ jobs:
       - name: TypeScript Check
         run: yarn ts:check
 
-      # - name: Core Tests
-      #   run: yarn test
+      - name: Unit Tests
+        run: yarn test
+
+  check-isolation:
+    # Every package must work when installed without @react-native-ama/core
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'yarn'
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Install and bundle each package without core
+        run: yarn test:isolation
+
+      - name: Check the agent skills
+        run: yarn test:skills

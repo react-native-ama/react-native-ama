@@ -52,12 +52,13 @@ AMA is made of the following packages:
 
 - `@react-native-ama/core`: the core components and hooks, providers and consumers used by AMA packages
 - `@react-native-ama/animations`: to create accessible animations
-- `@react-native-ama/react-native`: for accessibility-first React Native replacement components
 - `@react-native-ama/forms`: to create accessible forms
 - `@react-native-ama/lists`: to create accessible lists
 - `@react-native-ama/bottom-sheet`: to create accessible bottom sheets
 
-The `core` package, is the minimum installable setup for AMA to function. This package contains the AMA context provider and consumer as well various other hooks and utilities for focusing, WCAG checks, accessibility tree management, etc.
+The `core` package contains the AMA context provider and consumer, the runtime accessibility checks, and various other hooks and utilities for focusing, WCAG checks, accessibility tree management, etc.
+
+The other packages can be installed on their own, without `core`. With `core` installed and the app wrapped in `<AMAProvider />`, they also report their issues through AMA's runtime checks.
 
 Start off by installing `core` and wrapping your app in the `<AMAProvider>`. Then add any other AMA packages you wish to make use of for building an accessible mobile app.
 
@@ -103,6 +104,16 @@ npx expo run:ios      # or npx expo run:android
 You can use the playground app within this repository to see how AMA checks work in practice.
 The playground can also be used to learn how to fix accessibility issues in your app.
 
+
+## 🤖 AI coding agents
+
+Every AMA package ships an [agent skill](https://agentskills.io) that teaches AI coding agents (Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI and others) how to use its API and how to write code that passes AMA's checks:
+
+```sh
+npx skills add react-native-ama/react-native-ama
+```
+
+The skills are also included in each npm package, in `node_modules/@react-native-ama/<package>/skills/`, so you can link the ones matching your installed version. Agents use them automatically when your request matches. See [AI Coding Agents](https://commerce.nearform.com/open-source/react-native-ama/docs/ai-agents) for the details.
 
 ## 📃 [Documentation](https://commerce.nearform.com/open-source/react-native-ama)
 

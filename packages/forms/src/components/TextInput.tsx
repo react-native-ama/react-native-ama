@@ -72,9 +72,11 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       accessibilityLabel: accessibilityLabel || rest?.['aria-label'],
     });
 
-    const fullAccessibilityHint = [accessibilityHint, errorMessage]
+    // The error message is only part of the hint while the field is in error;
+    // otherwise a screen reader would announce it on valid fields too.
+    const fullAccessibilityHint = [accessibilityHint, hasError && errorMessage]
       .filter(Boolean)
-      ?.join(', ');
+      .join(', ');
 
     const showError = hasError && renderError;
 
