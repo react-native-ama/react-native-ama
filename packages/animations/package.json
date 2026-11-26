@@ -1,6 +1,6 @@
 {
   "name": "@react-native-ama/animations",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "sideEffects": false,
   "exports": {
     ".": {
@@ -40,7 +40,7 @@
     "test": "jest"
   },
   "peerDependencies": {
-    "@react-native-ama/core": "~2.0.0",
+    "@react-native-ama/core": "~2.0.1",
     "react": "*",
     "react-native": "*",
     "react-native-reanimated": ">=2.0.0"
