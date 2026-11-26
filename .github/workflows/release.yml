@@ -46,6 +46,7 @@ jobs:
         with:
           version: yarn run version
           publish: yarn changeset publish
+          commitMode: github-api
           title: 'chore: release package'
           commit: 'chore: release package'
         env:
