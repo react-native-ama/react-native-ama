@@ -44,6 +44,8 @@ Our official release path is to use automation to perform the actual publishing 
 2. On merge of a PR our automation system opens a "Version Packages" PR.
 3. On merging the "Version Packages" PR, the automation system publishes the packages.
 
+For the release workflow to create its PR, enable **Allow GitHub Actions to create and approve pull requests** in the repository's **Settings → Actions → General** workflow permissions.
+
 #### Add a changeset
 
 When you would like to add a changeset (which creates a file indicating the type of change), in your branch/PR issue this command:
